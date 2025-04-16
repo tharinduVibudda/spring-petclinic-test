@@ -35,7 +35,7 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                sh 'mvn clean test -Dspring.docker.compose.skip=true -Dspring.profiles.active="" -Dtest="!*PostgresIntegrationTests"'
+                sh 'mvn clean test -Dtest="!*PostgresIntegrationTests"'
                 
             }
         }
