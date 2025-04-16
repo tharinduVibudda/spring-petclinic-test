@@ -87,7 +87,7 @@ pipeline {
                         git config user.name "Jenkins CI"
                         git add .
                         git commit -m "Deploy build to Azure App Service"
-                        git remote add azure https://${AZUSER}:${AZPASS}@<app-name>.scm.azurewebsites.net/<app-name>.git
+                        git remote add azure https://${AZUSER}:${AZPASS}@spring-petclinic-app.scm.azurewebsites.net/spring-petclinic-app.git
                         git push --force azure master
                     '''
                 }
