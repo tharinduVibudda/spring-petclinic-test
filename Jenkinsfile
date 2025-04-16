@@ -28,10 +28,11 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                sh 'mvn clean package'
-                sh 'mvn test'
+                sh 'mvn clean package -Dspring.profiles.active=default -Dspring.docker.compose.skip=true'
+                
             }
         }
+        
 
         stage('Archive JAR') {
             steps {
