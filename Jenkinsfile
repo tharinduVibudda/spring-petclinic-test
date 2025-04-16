@@ -28,7 +28,7 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                sh 'mvn clean package -Dspring.profiles.active=default -Dspring.docker.compose.skip=true'
+                sh 'mvn clean test -Dspring.docker.compose.skip=true -Dspring.profiles.active=""'
                 
             }
         }
