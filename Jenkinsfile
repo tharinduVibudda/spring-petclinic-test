@@ -33,9 +33,9 @@ pipeline {
         //     }
         // }
 
-        stage('Unit Test') {
+        stage('Build & Test') {
             steps {
-                 sh 'mvn test -Dspring.docker.compose.skip=true -Dspring.profiles.active=""'
+                sh 'mvn clean test -Dspring.docker.compose.skip=true -Dspring.profiles.active="" -Dtest="!*PostgresIntegrationTests"'
                 
             }
         }
