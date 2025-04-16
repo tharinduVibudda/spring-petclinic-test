@@ -4,7 +4,7 @@ pipeline {
     environment {
         GIT_CREDENTIALS_ID = 'github-creds'
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
-        DOCKER_IMAGE = 'tharindu1996/spring-petclinic-test'
+        DOCKER_IMAGE = 'tharindu1996/spring-petclinic'
     }
 
     tools {
@@ -13,9 +13,16 @@ pipeline {
     }
 
     stages {
-        stage('Clone') {
+        stage('Checkout') {
             steps {
-                git credentialsId: "${env.GIT_CREDENTIALS_ID}", url: 'https://github.com/tharinduVibudda/spring-petclinic-test.git', branch: 'main'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/tharinduVibudda/spring-petclinic-test.git',
+                        credentialsId: "${env.GIT_CREDENTIALS_ID}"
+                    ]]
+                ])
             }
         }
 
