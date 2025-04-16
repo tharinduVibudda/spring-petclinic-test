@@ -26,9 +26,23 @@ pipeline {
             }
         }
 
-        stage('Build & Test') {
+        // stage('Build & Test') {
+        //     steps {
+        //         sh 'mvn clean test -Dspring.docker.compose.skip=true -Dspring.profiles.active=""'
+                
+        //     }
+        // }
+
+        stage('Unit Test') {
             steps {
-                sh 'mvn clean test -Dspring.docker.compose.skip=true -Dspring.profiles.active=""'
+                 sh 'mvn test -Dspring.docker.compose.skip=true -Dspring.profiles.active=""'
+                
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests'
                 
             }
         }
