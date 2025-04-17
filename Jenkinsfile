@@ -6,7 +6,6 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE = 'tharindu1996/test-springboot'
         AZURE_DEPLOY_CREDENTIALS_ID = 'azure-deploy-creds'
-        AZURE_DEPLOY_GIT = 'https://None@spring-petclinic-app.scm.azurewebsites.net/spring-petclinic-app.git'
     }
 
     tools {
