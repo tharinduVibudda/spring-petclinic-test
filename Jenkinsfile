@@ -5,7 +5,9 @@ pipeline {
         GIT_CREDENTIALS_ID = 'github-creds'
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE = 'tharindu1996/test-springboot'
-        AZURE_DEPLOY_CREDENTIALS_ID = 'azure-deploy-creds'
+        AZURE_SP_CREDENTIALS_ID = 'azure-sp-json' // this is the new secret text credential
+        RESOURCE_GROUP = 'petclinic-rg'
+        APP_NAME = 'spring-petclinic-app'
     }
 
     tools {
@@ -72,26 +74,36 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy to Azure App Service') {
+       stage('Deploy to Azure App Service (ZIP)') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${env.AZURE_DEPLOY_CREDENTIALS_ID}", usernameVariable: 'AZUSER', passwordVariable: 'AZPASS')]) {
+                withCredentials([string(credentialsId: "${env.AZURE_SP_CREDENTIALS_ID}", variable: 'AZURE_CREDENTIALS_JSON')]) {
                     sh '''
+                        echo "$AZURE_CREDENTIALS_JSON" > azureauth.json
+                        
+                        # Log in using Service Principal
+                        az login --service-principal \
+                          --username $(jq -r .clientId azureauth.json) \
+                          --password $(jq -r .clientSecret azureauth.json) \
+                          --tenant $(jq -r .tenantId azureauth.json)
+
+                        # Prepare ZIP for deployment
                         cd target
                         mkdir deploy
                         cp *.jar deploy/app.jar
                         cd deploy
-                        git init
-                        git config user.email "ci@jenkins"
-                        git config user.name "Jenkins CI"
-                        git add .
-                        git commit -m "Deploy build to Azure App Service"
-                        git remote add azure https://${AZUSER}:${AZPASS}@spring-petclinic-app.scm.azurewebsites.net/spring-petclinic-app.git
-                        git push --force azure master
+                        zip -r ../../deploy.zip .
+                        cd ../..
+
+                        # Deploy to Azure App Service
+                        az webapp deployment source config-zip \
+                          --resource-group "$RESOURCE_GROUP" \
+                          --name "$APP_NAME" \
+                          --src deploy.zip
                     '''
                 }
             }
         }
+        
     }
 
     post {
