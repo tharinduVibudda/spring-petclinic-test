@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        Test='test'
         GIT_CREDENTIALS_ID = 'github-creds'
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE = 'tharindu1996/test-springboot'
